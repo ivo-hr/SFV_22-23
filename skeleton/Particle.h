@@ -11,7 +11,7 @@ public:
 
 	void integrate(double t);
 
-private:
+protected:
 	Vector3 vel, acc;
 	float damp;
 	physx::PxTransform pose;

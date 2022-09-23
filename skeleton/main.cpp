@@ -12,6 +12,8 @@
 
 #include "Particle.h"
 
+#include "Projectile.h"
+
 
 using namespace physx;
 
@@ -30,6 +32,9 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 Particle* part;
+
+
+std::vector<Projectile*> projectiles;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -55,7 +60,8 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	part = new Particle(Vector3(0, 0, 0), Vector3(-3, -1, 0), Vector3(+2, +1, 0), 8);
+	//part = new Particle(Vector3(0, 3, 0), Vector3(3, 0, 0), Vector3(0, 3, 0), 2);
+
 	}
 
 
@@ -69,7 +75,9 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-	part->integrate(t);
+	for (Projectile* p : projectiles) {
+		p->integrate(t);
+	}
 }
 
 // Function to clean data
@@ -88,6 +96,10 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
+
+	for (Projectile* p : projectiles) {
+		delete p;
+	}
 	}
 
 // Function called when a key is pressed
@@ -103,6 +115,18 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 		break;
 	}
+	case '1':
+		projectiles.push_back(new Projectile(Projectile::Bullet));
+	break;
+	case '2':
+		projectiles.push_back(new Projectile(Projectile::Mortar));
+		break;
+	case '3':
+		projectiles.push_back(new Projectile(Projectile::RPG));
+		break;
+	case '4':
+		projectiles.push_back(new Projectile(Projectile::Plasma));
+		break;
 	default:
 		break;
 	}
