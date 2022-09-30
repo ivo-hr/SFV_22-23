@@ -20,6 +20,7 @@ public:
 			vel = 300 * dir;
 			acc = Vector3(0, -9.8, 0);
 			damp = 0.9;
+			setLifeTime(1);
 
 			break;
 		case Projectile::Mortar:
@@ -27,28 +28,45 @@ public:
 			vel = 40 * dir;
 			acc = Vector3(0, -9.8, 0);
 			damp = 0.9;
+			setLifeTime(3);
 
 			break;
 		case Projectile::RPG:
 
 			vel = 60 * dir;
-			acc = Vector3(0, -9.8, 0) + dir * 50;
-			damp = 0;
+			acc = Vector3(0, -1, 0) + dir * 50;
+			damp = 0.9999;
+			setLifeTime(2);
 
 			break;
 		case Projectile::Plasma:
+			vel = 20 * dir;
+			acc = Vector3(0, +4.5, 0) + dir * 6;
+			damp = 0.9;
+			setLifeTime(5);
 			break;
 		default:
-			vel = 20 * dir;
-			acc = Vector3(0, +1.2, 0) + dir * 6;
-			damp = 0.9;
+
 			break;
 		}
 
 	}
 
+	int getLifeTime() {
+		return lifeTime;
+	}
+
+	void setLifeTime(double set) {
+		lifeTime = set;
+	}
+
+	void restLifeTime(double rest) {
+		lifeTime -= rest;
+	}
+
 private:
 	Vector3 pos;
+	double lifeTime = 30;
 	//new Particle(Vector3(-30, -30, 0), Vector3(10, 20, 0), Vector3(0, -9.8, 0), 0.9);
 
 

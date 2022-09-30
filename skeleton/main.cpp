@@ -75,8 +75,26 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-	for (Projectile* p : projectiles) {
+	/*for (Projectile* p : projectiles) {
 		p->integrate(t);
+
+		p->restLifeTime(t);
+		if (p->getLifeTime() < 0) {
+			delete p;
+		}
+
+	}*/
+
+	for (auto i = projectiles.begin(); i != projectiles.end();) {
+		(*i)->integrate(t);
+
+		(*i)->restLifeTime(t);
+
+		if ((*i)->getLifeTime() < 0) {
+			delete (*i);
+			(i) = projectiles.erase(i);
+		}
+		else ++i;
 	}
 }
 
@@ -84,7 +102,13 @@ void stepPhysics(bool interactive, double t)
 // Add custom code to the begining of the function
 void cleanupPhysics(bool interactive)
 {
+
+
 	PX_UNUSED(interactive);
+
+	for (Projectile* p : projectiles) {
+		delete p;
+	}
 
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
@@ -97,9 +121,7 @@ void cleanupPhysics(bool interactive)
 	
 	gFoundation->release();
 
-	for (Projectile* p : projectiles) {
-		delete p;
-	}
+
 	}
 
 // Function called when a key is pressed
