@@ -31,8 +31,9 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
-Particle* part;
 
+
+Particle* flr;
 
 std::vector<Projectile*> projectiles;
 
@@ -60,9 +61,9 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	//part = new Particle(Vector3(0, 3, 0), Vector3(3, 0, 0), Vector3(0, 3, 0), 2);
+	flr = new Particle(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
-	}
+}
 
 
 // Function to configure what happens in each step of physics

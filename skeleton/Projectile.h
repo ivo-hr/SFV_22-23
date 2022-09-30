@@ -27,14 +27,14 @@ public:
 
 			vel = 40 * dir;
 			acc = Vector3(0, -9.8, 0);
-			damp = 0.9;
+			damp = 0.3;
 			setLifeTime(3);
 
 			break;
 		case Projectile::RPG:
 
-			vel = 60 * dir;
-			acc = Vector3(0, -1, 0) + dir * 50;
+			vel = 1 * dir;
+			acc = Vector3(0, +2, 0) + dir * 50;
 			damp = 0.9999;
 			setLifeTime(2);
 
