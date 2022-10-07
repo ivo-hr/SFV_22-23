@@ -1,6 +1,6 @@
 #include "Particle.h"
 
-Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, Vector3 Scale, Vector3 Colour, float Damp) {
+Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, float Damp) {
 
 	this->vel = Vel;
 	this->acc = Acc;
