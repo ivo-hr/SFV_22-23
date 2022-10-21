@@ -10,6 +10,17 @@ Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, float Damp) {
 	this->renderItem = new RenderItem(sph, &this->pose, Vector4(1, 0.2, 0.2, 1));
 }
 
+Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, Vector4 Col, float Damp, double life) {
+
+	this->vel = Vel;
+	this->acc = Acc;
+	this->damp = Damp;
+	this->lifeTime = life;
+	this->pose = physx::PxTransform(Pos);
+	physx::PxShape* sph = CreateShape(physx::PxSphereGeometry(1));
+	this->renderItem = new RenderItem(sph, &this->pose, Col);
+}
+
 Particle::Particle(Vector3 Pos, Vector3 Scale) {
 	this->vel = Vector3();
 	this->acc = Vector3();
