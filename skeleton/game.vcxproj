@@ -265,8 +265,9 @@
   <ItemGroup>
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="Firework.h" />
     <ClInclude Include="GaussianPartGen.h" />
-    <ClInclude Include="NormalPartGen.h" />
+    <ClInclude Include="UniformPartGen.h" />
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Projectile.h" />

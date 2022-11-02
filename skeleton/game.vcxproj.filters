@@ -29,7 +29,8 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="GaussianPartGen.h" />
-    <ClInclude Include="NormalPartGen.h" />
+    <ClInclude Include="UniformPartGen.h" />
+    <ClInclude Include="Firework.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
