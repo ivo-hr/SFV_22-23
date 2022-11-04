@@ -254,9 +254,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="Firework.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />

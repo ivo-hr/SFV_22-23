@@ -1,43 +1,32 @@
 #include "Particle.h"
 
-Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, float Damp) {
-
+Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, float damp, float mass, float time, Vector4 color, physx::PxShape* sh, bool render) {
 	this->vel = Vel;
+	this->pose = physx::PxTransform(Pos);
 	this->acc = Acc;
-	this->damp = Damp;
-	this->pose = physx::PxTransform(Pos);
-	physx::PxShape* sph = CreateShape(physx::PxSphereGeometry(1));
-	this->renderItem = new RenderItem(sph, &this->pose, Vector4(1, 0.2, 0.2, 1));
+	this->damping = damp;
+	this->color = color;
+	this->shape = sh;
+	if (render) {
+		this->renderItem = new RenderItem(sh, &this->pose, color);
+	}
+	else {
+		this->renderItem = nullptr;
+	}
+	this->timeLimit = time;
+	this->force = { 0,0,0 };
+	mass > 0.0f ? this->inverse_mass = 1.0f / mass : this->inverse_mass = 0.0f;
 }
-
-Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, Vector4 Col, float Damp, double life) {
-
-	this->vel = Vel;
-	this->acc = Acc;
-	this->damp = Damp;
-	this->lifeTime = life;
-	this->pose = physx::PxTransform(Pos);
-	physx::PxShape* sph = CreateShape(physx::PxSphereGeometry(1));
-	this->renderItem = new RenderItem(sph, &this->pose, Col);
-}
-
-Particle::Particle(Vector3 Pos, Vector3 Scale) {
-	this->vel = Vector3();
-	this->acc = Vector3();
-	this->damp = 0;
-	this->pose = physx::PxTransform(Pos);
-
-	physx::PxShape* pln = CreateShape(physx::PxBoxGeometry(Scale.x, Scale.y, Scale.z));
-	this->renderItem = new RenderItem(pln, &this->pose, Vector4(0.1, 0.1, 0.1, 1));
-}
-
 
 Particle::~Particle() {
-	renderItem->release();
+	DeregisterRenderItem(this->renderItem);
 }
 
 void Particle::integrate(double t) {
+	if (inverse_mass <= 0.0f) return;
 	this->pose.p += this->vel * t;
-
-	this->vel = this->vel * pow(damp, t) + acc * t;
+	this->acc += force * inverse_mass;
+	this->vel = this->vel * pow(this->damping, t) + this->acc * t;
+	this->timeLimit -= t;
+	clearForce();
 }

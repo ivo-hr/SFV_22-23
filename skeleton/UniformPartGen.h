@@ -1,44 +1,49 @@
 #pragma once
-#include <list>
-#include <vector>
-#include <random>
 #include "ParticleGenerator.h"
-
-class UniformPartGen : public ParticleGenerator {
+#include <random>
+class UniformParticleGenerator : public ParticleGenerator {
 public:
-	UniformPartGen(Vector3 Pos, Vector3 Vel, Vector3 Acc, Vector4 Col, float Damp, double life, double probability, int maximum) {
-		avgPos = Pos; avgVel = Vel; avgAcc = Acc; col = Col; damp = Damp; avgTim = life; genProb = probability; maxPart = maximum;
+	UniformParticleGenerator(std::string name, Particle* model, double genProb, Vector3 posDeviation, Vector3 velDeviation, int numPart) {
+		setName(name);
+		_model = model;
+		_mean_pos = model->getPos();
+		_mean_vel = model->getVel();
+		_mean_acc = model->getAcc();
+		_generation_probability = genProb;
+		_std_dev_vel = velDeviation;
+		_std_dev_pos = posDeviation;
+		_num_particles = numPart;
+		std::random_device r;
+		random_generator = std::mt19937(r());
 	}
 
 	std::list<Particle*> generateParticles() override {
-		std::list<Particle*> part;
-
-		auto posX = std::uniform_real_distribution<float>(avgPos.x, devPos.z);
-		auto posY = std::uniform_real_distribution<float>(avgPos.y, devPos.z);
-		auto posZ = std::uniform_real_distribution<float>(avgPos.z, devPos.z);
-
+		std::list<Particle*> l;
+		auto px = std::uniform_real_distribution<float>((float)_mean_pos.x, (float)_std_dev_pos.z);
+		auto py = std::uniform_real_distribution<float>((float)_mean_pos.y, (float)_std_dev_pos.z);
+		auto pz = std::uniform_real_distribution<float>((float)_mean_pos.z, (float)_std_dev_pos.z);
 		auto gen = std::uniform_int_distribution<int>(0, 100);
+		auto vx = std::uniform_real_distribution<float>((float)_mean_vel.x, (float)_std_dev_vel.x);
+		auto vy = std::uniform_real_distribution<float>((float)_mean_vel.y, (float)_std_dev_vel.y);
+		auto vz = std::uniform_real_distribution<float>((float)_mean_vel.z, (float)_std_dev_vel.z);
 
-		auto velX = std::uniform_real_distribution<float>(avgVel.x, devVel.x);
-		auto velY = std::uniform_real_distribution<float>(avgVel.y, devVel.y);
-		auto velZ = std::uniform_real_distribution<float>(avgVel.z, devVel.z);
 
-		for (int i = 0; i < maxPart; i++) {
-			int r = gen(randGen);
-			if (r < genProb) {
-				Vector3 pos = { posX(randGen), posY(randGen), posZ(randGen) };
-				Vector3 vel = { velX(randGen), velY(randGen), velZ(randGen) };
-				double lifeTime = std::uniform_int_distribution<int>(avgTim - 2, avgTim + 2)(randGen);
+		for (int i = 0; i < _num_particles; i++) {
+			int cr = gen(random_generator);
+			if (cr <= _generation_probability)
+			{
+				Vector3 pos = { px(random_generator), py(random_generator), pz(random_generator) };
+				Vector3 vel = { vx(random_generator), vy(random_generator), vz(random_generator) };
 
-				Particle* p = new Particle(pos, vel, avgAcc, col, damp, lifeTime);
-
-				part.push_back(p);
+				Particle* p = _model->clone();
+				p->setPos(pos);
+				p->setVel(vel);
+				l.push_back(p);
 			}
 		}
-
-		return part;
-	}
+		return l;
+	};
 protected:
-	Vector3 devPos, devVel;
-	std::mt19937 randGen;
+	std::mt19937 random_generator;
+	Vector3 _std_dev_vel, _std_dev_pos;
 };

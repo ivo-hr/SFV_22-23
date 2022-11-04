@@ -14,6 +14,8 @@
 
 #include "Projectile.h"
 
+#include "ParticleSystem.h"
+
 
 using namespace physx;
 
@@ -36,6 +38,8 @@ ContactReportCallback gContactReportCallback;
 Particle* flr;
 
 std::vector<Projectile*> projectiles;
+
+ParticleSystem* partSys;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -61,7 +65,7 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	flr = new Particle(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
+	flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
 }
 
@@ -110,7 +114,7 @@ void cleanupPhysics(bool interactive)
 	for (Projectile* p : projectiles) {
 		delete p;
 	}
-
+	delete partSys;
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
@@ -149,6 +153,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	case '4':
 		projectiles.push_back(new Projectile(Projectile::Plasma));
+		break;
+	case '5':
+			partSys->generateGFireworksSystem();
+	break;
+	case '6':
+		partSys->generateNFireworksSystem();
 		break;
 	default:
 		break;
