@@ -10,11 +10,13 @@ Firework::~Firework()
 
 std::list<Particle*> Firework::explode()
 {
-	std::list<Particle*> l;
-	for (auto g : _gens) {
+	std::list<Particle*> pr;
+	for (auto g : _gens)
 		for (auto p : g->generateParticles()) {
-			l.push_back(p);
+			p->setVel(p->getVel() + vel/10);
+			p->setPos(pose.p);
+			pr.push_back(p);
 		}
-	}
-	return l;
+
+	return pr;
 }

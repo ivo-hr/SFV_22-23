@@ -13,14 +13,14 @@ public:
 	virtual void integrate(double t);
 	virtual bool isAlive() { return timeLimit > 0; }
 	virtual Particle* clone() {
-		return new Particle(pose.p, vel, acc, damping, inverse_mass > 0 ? 1.0f / inverse_mass : 0.0f, timeLimit, color, shape);
+		return new Particle(pose.p, vel, acc, damping, unMass > 0 ? 1.0f / unMass : 0.0f, timeLimit, color, shape);
 	};
 	virtual void setVel(Vector3 vel) { this->vel = vel; };
 	virtual void setPos(Vector3 pos) { this->pose.p = pos; };
 	virtual void setAcc(Vector3 acc) { this->acc = acc; };
 	virtual void setMass(float mass) {
 		if (mass <= 0) return;
-		inverse_mass = 1.0f / mass;
+		unMass = 1.0f / mass;
 	}
 	virtual void clearForce() { force *= 0; }
 	virtual void addForce(Vector3 f) { force += f; }
@@ -32,7 +32,7 @@ protected:
 	physx::PxShape* shape;
 	Vector3 vel, acc;
 	Vector3 force;
-	float inverse_mass;
+	float unMass;
 	float damping;
 	physx::PxTransform pose;
 	RenderItem* renderItem;
@@ -41,7 +41,7 @@ protected:
 
 class Floor : public Particle {
 public:
-	Floor(Vector3 Pos, Vector3 Dim) : Particle(Pos, Vector3(0, 0, 0), Vector3(0, 0, 0), 0.0f, 1.0f, 1, { 0.9,0.5,0.9,1 }, CreateShape(physx::PxBoxGeometry(Dim))) {
+	Floor(Vector3 Pos, Vector3 Dim) : Particle(Pos, Vector3(0, 0, 0), Vector3(0, 0, 0), 0.0f, 1.0f, 1, { 0.,1.,.3,1 }, CreateShape(physx::PxBoxGeometry(Dim))) {
 	}
 	virtual ~Floor() {};
 };

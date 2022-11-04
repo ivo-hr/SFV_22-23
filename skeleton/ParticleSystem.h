@@ -5,67 +5,67 @@
 #include "Firework.h"
 #include <memory>
 class ParticleSystem {
-protected:
-	std::list<Particle*> _particles;
-	std::list<ParticleGenerator*> _generators;
-	Vector3 pos;
+
 public:
 	ParticleSystem(Vector3 Pos) {
 		pos = Pos;
 	};
 	void update(double t) {
 		for (auto g : _generators)
-		{
-			for (auto p : g->generateParticles()) {
+			for (auto p : g->generateParticles())
 				_particles.push_back(p);
-			}
-		}
 
 		for (auto it = _particles.begin(); it != _particles.end();) {
 			(*it)->integrate(t);
 
 			if (!(*it)->isAlive()) {
 				Firework* f = dynamic_cast<Firework*>(*it);
-				if (f != nullptr) {
-					for (auto i : f->explode()) {
+				if (f != nullptr)
+					for (auto i : f->explode())
 						_particles.push_back(i);
-					}
-				}
 				delete (*it);
 				it = _particles.erase(it);
 			}
-			else {
-				it++;
-			}
+			else it++;
 		}
-
 	};
 	ParticleGenerator* getParticleGenerator(std::string name) {
-		for (auto g : _generators) {
+		for (auto g : _generators)
 			if (g->getName() == name)
 				return g;
-		}
+		return nullptr;
 	};
 	void generateNFireworksSystem() {
-		//if (getParticleGenerator("Uniform") != nullptr) return;
+		if (getParticleGenerator("Uniform") != nullptr) return;
 
-		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 2, { 0,1,0,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
+		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 5, { 0,1,1,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
 
 		std::shared_ptr<UniformParticleGenerator> p;
-		p.reset(new UniformParticleGenerator("Uniform", i, 0.75, { 10,10,10 }, { 1,1,1 }, 1000));
-		Firework* f = new Firework(pos, { 0,20,0 }, { 0,0,0 }, 0.99, 3.0f, 1.5, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(3)), { p });
+		p.reset(new UniformParticleGenerator("Uniform", i, 0.75, { 10,10,10 }, { 15,15,15 }, 1000));
+		Firework* f = new Firework(pos, { 0,10,0 }, { 0,90,0 }, 0.99, 3.0f, 2, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(3)), { p });
 		_particles.push_back(f);
 
 
 	};
 	void generateGFireworksSystem() {
-		//if (getParticleGenerator("Gauss") != nullptr) return;
+		if (getParticleGenerator("Gauss") != nullptr) return;
 
-		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 2, { 0,1,0,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
+		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 5, { 1,0,1,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
 
 		std::shared_ptr<GaussianParticleGenerator> p;
-		p.reset(new GaussianParticleGenerator("Gauss", i, 0.75, { 10,10,10 }, { 1,1,1 }, 1000));
-		Firework* f = new Firework(pos, { 0,20,0 }, { 0,0,0 }, 0.99, 3.0f, 1.5, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(3)), { p });
+		p.reset(new GaussianParticleGenerator("Gauss", i, 0.75, { 10,10,10 }, { 10,10,10 }, 1000));
+		Firework* f = new Firework(pos, { 0,20,0 }, { 0,50,0 }, 0.99, 3.0f, 2, { 0,0,1,1 }, CreateShape(physx::PxSphereGeometry(3)), { p });
+		_particles.push_back(f);
+
+	};
+	void generateWhateverSystem() {
+		if (getParticleGenerator("Whatever") != nullptr) return;
+
+		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 2, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
+
+		std::shared_ptr<GaussianParticleGenerator> p;
+		p.reset(new GaussianParticleGenerator("Gauss", i, 0.5, { 10,10,10 }, { 10,10,10 }, 1000));
+		Firework* f = new Firework(pos, { 0,0,0 }, { 0,0,0 }, 0.5, 1.0f, 0, { 1,1,1,1 }, CreateShape(physx::PxBoxGeometry(Vector3(1,1,1))), { p });
 		_particles.push_back(f);
 
 	};
@@ -78,4 +78,10 @@ public:
 		}
 
 	};
+
+
+protected:
+	std::list<Particle*> _particles;
+	std::list<ParticleGenerator*> _generators;
+	Vector3 pos;
 };

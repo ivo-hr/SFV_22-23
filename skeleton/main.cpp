@@ -67,6 +67,10 @@ void initPhysics(bool interactive)
 
 	flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
+	partSys = new ParticleSystem(Vector3(0, 0, -100));
+
+	//partSys->generateGFireworksSystem();
+
 }
 
 
@@ -101,6 +105,8 @@ void stepPhysics(bool interactive, double t)
 		}
 		else ++i;
 	}
+
+	partSys->update(t);
 }
 
 // Function to clean data
@@ -155,11 +161,15 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		projectiles.push_back(new Projectile(Projectile::Plasma));
 		break;
 	case '5':
-			partSys->generateGFireworksSystem();
+		partSys->generateGFireworksSystem();
 	break;
 	case '6':
 		partSys->generateNFireworksSystem();
 		break;
+	case '7':
+		partSys->generateWhateverSystem();
+		break;
+
 	default:
 		break;
 	}
