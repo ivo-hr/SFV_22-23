@@ -6,6 +6,7 @@
 #include "ForceGenerator.h"
 #include "ParticleForceReg.h"
 #include <memory>
+#include <random>
 class ParticleSystem {
 
 public:
@@ -61,7 +62,7 @@ public:
 		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 5, { 1,0,1,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
 		_registry.addReg(activeForce, i);
 		std::shared_ptr<GaussianParticleGenerator> p;
-		p.reset(new GaussianParticleGenerator("Gauss", i, 0.75, { 10,10,10 }, { 10,10,10 }, 1000, _registry, activeForce));
+		p.reset(new GaussianParticleGenerator("Gauss", i, 0.75, { 10,10,10 }, { 10,10,10 }, 1000));
 		Firework* f = new Firework(pos, { 0,20,0 }, { 0,50,0 }, 0.99, 3.0f, 2, { 0,0,1,1 }, CreateShape(physx::PxSphereGeometry(3)), { p });
 		_particles.push_back(f);
 		_registry.addReg(activeForce, f);
@@ -72,7 +73,7 @@ public:
 		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 200.0f, 2, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
 		_registry.addReg(activeForce, i);
 		std::shared_ptr<GaussianParticleGenerator> p;
-		p.reset(new GaussianParticleGenerator("Gauss", i, 0.5, { 10,10,10 }, { 10,10,10 }, 1000, _registry, activeForce));
+		p.reset(new GaussianParticleGenerator("Gauss", i, 0.5, { 10,10,10 }, { 10,10,10 }, 1000));
 		Firework* f = new Firework(pos, { 0,0,0 }, { 0,0,0 }, 0.5, 1.0f, 0, { 1,1,1,1 }, CreateShape(physx::PxBoxGeometry(Vector3(1,1,1))), { p });
 		_particles.push_back(f);
 		_registry.addReg(activeForce, f);
@@ -90,36 +91,46 @@ public:
 	};
 
 
-	void gravGen() {
-		Particle* part = new Particle({ 10,10,10 }, { 0,0,0 }, { 0,0,0 },
-			0.99, 10, 10, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(10)), true);
+	void gravGen(int num) {
 		
 		GravForceGen* gen = new GravForceGen(Vector3(0, -9.8, 0), 100);
 		
-		_registry.addReg(gen, part);
-		_particles.push_back(part);
-		
+		for (int i = 0; i < num; i++) {
+			Particle* part = new Particle({ 10,(float)i,10 }, { 0,0,0 }, { 0,0,0 },
+				0.99, 10, 100000, { 0,0,1,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+			_registry.addReg(gen, part);
+			_particles.push_back(part);
+		}
+
 		activeForce = 1;
 	}
-	void WindGen() {
-		Particle* part = new Particle({ 10,10,10 }, { 0,0,0 }, { 0,0,0 },
-			0.99, 10, 100000, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(10)), true);
+	void WindGen(int num) {
 		
 		WindForceGen* gen = new WindForceGen(Vector3(5, 0, 0), 1, 0.1);
-		
-		_registry.addReg(gen, part);
-		_particles.push_back(part);
+
+		for (int i = 0; i < num; i++) {
+			Particle* part = new Particle({ 10,(float)i,10 }, { 0,0,0 }, { 0,0,0 },
+				0.99, 10, 100000, { 0,1,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+			_registry.addReg(gen, part);
+			_particles.push_back(part);
+		}
 		activeForce = 2;
 	}
-	void TornadoGen() {
-		Particle* part = new Particle({ 10,0,10 }, { 0,0,0 }, { 0,0,0 },
-			0.99, 10, 100000, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+	void TornadoGen(int num) {
+
 		
 		TornadoForceGen* gen = new TornadoForceGen(Vector3(0, 0, 0), 1, 0.1, 0.75);
-		_registry.addReg(gen, part);
-		_particles.push_back(part);
+		
+		
+		for (int i = 0; i < num; i++) {
+			Particle* part = new Particle({ 10,(float)i,10}, { 0,0,0 }, { 0,0,0 },
+				0.99, 10, 100000, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+			_registry.addReg(gen, part);
+			_particles.push_back(part);
+		}
 		
 		activeForce = 3;
+		
 	}
 
 

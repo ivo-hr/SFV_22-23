@@ -14,7 +14,7 @@ public:
 	void setParticle(Particle* part) { _model = part; }
 	virtual ~ParticleGenerator() {};
 
-protected:
+
 	Vector3 _mean_pos, _mean_vel, _mean_acc;
 	Vector4 _modelColor;
 	double _generation_probability;
