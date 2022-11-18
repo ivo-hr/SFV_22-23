@@ -1,6 +1,7 @@
 #pragma once
 #include "Particle.h"
 #include "ParticleGenerator.h"
+#include "ParticleForceReg.h"
 #include <list>
 #include <memory>
 

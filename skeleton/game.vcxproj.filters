@@ -12,6 +12,7 @@
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Firework.cpp" />
+    <ClCompile Include="ForceGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -30,6 +31,8 @@
     <ClInclude Include="GaussianPartGen.h" />
     <ClInclude Include="UniformPartGen.h" />
     <ClInclude Include="Firework.h" />
+    <ClInclude Include="ForceGenerator.h" />
+    <ClInclude Include="ParticleForceReg.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

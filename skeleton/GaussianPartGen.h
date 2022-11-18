@@ -3,7 +3,7 @@
 #include <random>
 class GaussianParticleGenerator : public ParticleGenerator {
 public:
-	GaussianParticleGenerator(std::string name, Particle* model, double genProb, Vector3 posDeviation, Vector3 velDeviation, int numPart) {
+	GaussianParticleGenerator(std::string name, Particle* model, double genProb, Vector3 posDeviation, Vector3 velDeviation, int numPart, ParticleForceReg force, int forceTyp) {
 		setName(name);
 		_model = model;
 		_mean_pos = model->getPos();
@@ -15,6 +15,9 @@ public:
 		_num_particles = numPart;
 		std::random_device rnd;
 		random_generator = std::mt19937(rnd());
+		
+		_force = force;
+		forceType = forceTyp;
 	}
 
 	std::list<Particle*> generateParticles() override {
@@ -39,11 +42,18 @@ public:
 				p->setPos(pos);
 				p->setVel(vel);
 				l.push_back(p);
+				_particles.push_back(p);
+				_force.addReg(forceType, p);
 			}
 		}
 		return l;
 	};
+
+	std::vector<Particle*> getParticles() { return _particles; }
 protected:
 	std::mt19937 random_generator;
 	Vector3 _std_dev_vel, _std_dev_pos;
+	std::vector<Particle*> _particles;
+	ParticleForceReg _force;
+	int forceType;
 };

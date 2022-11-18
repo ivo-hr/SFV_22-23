@@ -65,10 +65,10 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
+	//flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
 	partSys = new ParticleSystem(Vector3(0, 0, -100));
-
+	partSys->TornadoGen();
 	//partSys->generateGFireworksSystem();
 
 }
@@ -107,6 +107,7 @@ void stepPhysics(bool interactive, double t)
 	}
 
 	partSys->update(t);
+	
 }
 
 // Function to clean data

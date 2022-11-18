@@ -4,6 +4,7 @@
 #include <list>
 #include <string>
 #include "Particle.h"
+#include "ParticleForceReg.h"
 
 class ParticleGenerator {
 public:

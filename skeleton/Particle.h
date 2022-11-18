@@ -19,20 +19,24 @@ public:
 	virtual void setPos(Vector3 pos) { this->pose.p = pos; };
 	virtual void setAcc(Vector3 acc) { this->acc = acc; };
 	virtual void setMass(float mass) {
-		if (mass <= 0) return;
-		unMass = 1.0f / mass;
+		if (mass <= 0) unMass = 0;
+		else unMass = 1/mass;
+
+		this->Mass = mass;
 	}
 	virtual void clearForce() { force *= 0; }
 	virtual void addForce(Vector3 f) { force += f; }
 	virtual Vector3 getPos() { return this->pose.p; };
 	virtual Vector3 getVel() { return this->vel; };
 	virtual Vector3 getAcc() { return this->acc; };
+	virtual float getMass() { return this->Mass; };
+	virtual float getUnMass() { return this->unMass; };
 protected:
 	Vector4 color;
 	physx::PxShape* shape;
 	Vector3 vel, acc;
 	Vector3 force;
-	float unMass;
+	float Mass, unMass;
 	float damping;
 	physx::PxTransform pose;
 	RenderItem* renderItem;
