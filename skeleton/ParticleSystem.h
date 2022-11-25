@@ -14,11 +14,12 @@ public:
 		pos = Pos;
 	};
 	void update(double t) {
-		for (auto g : _generators)
+		for (auto g : _generators) {
 			for (auto p : g->generateParticles()) {
 				_particles.push_back(p);
 				_registry.addReg(activeForce, p);	//no furula :(
 			}
+		}
 
 
 		_registry.updateForces(t);
@@ -29,8 +30,11 @@ public:
 			if (!(*it)->isAlive()) {
 				Firework* f = dynamic_cast<Firework*>(*it);
 				if (f != nullptr)
-					for (auto i : f->explode())
+					for (auto i : f->explode()) {
 						_particles.push_back(i);
+						_registry.addReg(activeForce, i);
+						
+					}
 				_registry.deletePartReg(*it);
 				delete (*it);
 				it = _particles.erase(it);
@@ -140,5 +144,5 @@ protected:
 	
 	ParticleForceReg _registry;
 	Vector3 pos;
-	int activeForce = 1;
+	int activeForce = 3;
 };

@@ -68,9 +68,11 @@ void initPhysics(bool interactive)
 	//flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
 	partSys = new ParticleSystem(Vector3(0, 0, -100));
-	partSys->TornadoGen(1000);
-	partSys->gravGen(1000);
-	partSys->WindGen(1000);
+	
+	partSys->gravGen(100);
+
+	//partSys->TornadoGen(100);
+	//partSys->WindGen(100);
 	//partSys->generateGFireworksSystem();
 
 }

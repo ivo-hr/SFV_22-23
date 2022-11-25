@@ -7,6 +7,7 @@ Particle::Particle(Vector3 Pos, Vector3 Vel, Vector3 Acc, float damp, float mass
 	this->damping = damp;
 	this->color = color;
 	this->shape = sh;
+	this->Mass = mass;
 	if (render) {
 		this->renderItem = new RenderItem(sh, &this->pose, color);
 	}
