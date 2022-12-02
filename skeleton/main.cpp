@@ -65,11 +65,11 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	//flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
+	flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
-	partSys = new ParticleSystem(Vector3(0, 0, -100));
+	partSys = new ParticleSystem(Vector3(0, 0, 0));
 	
-	partSys->gravGen(100);
+	partSys->TornadoGen(100);
 
 	//partSys->TornadoGen(100);
 	//partSys->WindGen(100);
@@ -104,6 +104,7 @@ void stepPhysics(bool interactive, double t)
 		(*i)->restLifeTime(t);
 
 		if ((*i)->getLifeTime() < 0) {
+			(*i)->clearForce();
 			delete (*i);
 			(i) = projectiles.erase(i);
 		}

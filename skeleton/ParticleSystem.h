@@ -98,10 +98,11 @@ public:
 	void gravGen(int num) {
 		
 		GravForceGen* gen = new GravForceGen(Vector3(0, -9.8, 0), 100);
+		_forceGenerators.push_back(gen);
 		
 		for (int i = 0; i < num; i++) {
 			Particle* part = new Particle({ 10,(float)i,10 }, { 0,0,0 }, { 0,0,0 },
-				0.99, 10, 100000, { 0,0,1,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+				0.99, 10, 20, { 0,0,1,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
 			_registry.addReg(gen, part);
 			_particles.push_back(part);
 		}
@@ -111,10 +112,11 @@ public:
 	void WindGen(int num) {
 		
 		WindForceGen* gen = new WindForceGen(Vector3(5, 0, 0), 1, 0.1);
-
+		_forceGenerators.push_back(gen);
+		
 		for (int i = 0; i < num; i++) {
 			Particle* part = new Particle({ 10,(float)i,10 }, { 0,0,0 }, { 0,0,0 },
-				0.99, 10, 100000, { 0,1,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+				0.99, 10, 20, { 0,1,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
 			_registry.addReg(gen, part);
 			_particles.push_back(part);
 		}
@@ -124,11 +126,11 @@ public:
 
 		
 		TornadoForceGen* gen = new TornadoForceGen(Vector3(0, 0, 0), 1, 0.1, 0.75);
-		
+		_forceGenerators.push_back(gen);
 		
 		for (int i = 0; i < num; i++) {
 			Particle* part = new Particle({ 10,(float)i,10}, { 0,0,0 }, { 0,0,0 },
-				0.99, 10, 100000, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+				0.99, 10, 20, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
 			_registry.addReg(gen, part);
 			_particles.push_back(part);
 		}
@@ -137,12 +139,70 @@ public:
 		
 	}
 
+	void AnchSpringGen() {
+		Particle* p = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10);
+		AnchoredSpringFG* spring = new AnchoredSpringFG(Vector3(-10, 0, 0), 2, 5);
+		_registry.addReg(spring, p);
+		DragForceGen* drag = new DragForceGen(.5);
+		_registry.addReg(drag, p);
+		_particles.push_back(p);
+		_forceGenerators.push_back(drag);
+		_forceGenerators.push_back(spring);
+	}
+	
+	void SpringGen() {
+		Particle* p1 = new Particle({ 10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10);
+		Particle* p2 = new Particle({ -10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,0,1,1 });
+		SpringForceGen* spring1 = new SpringForceGen(p1, 2, 5);
+		SpringForceGen* spring2 = new SpringForceGen(p2, 2, 5);
+		_registry.addReg(spring1, p2);
+		_registry.addReg(spring2, p1);
+		DragForceGen* drag = new DragForceGen(.5);
+		_registry.addReg(drag, p1);
+		_registry.addReg(drag, p2);
+		_particles.push_back(p1);
+		_particles.push_back(p2);
+		_forceGenerators.push_back(drag);
+		_forceGenerators.push_back(spring1);
+		_forceGenerators.push_back(spring2);
+	}
 
+	void BungeeGen() {
+		Particle* p1 = new Particle({ 10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10);
+		Particle* p2 = new Particle({ -10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,0,1,1 });
+		BungeeForceGen* spring1 = new BungeeForceGen(p1, 2, 10);
+		BungeeForceGen* spring2 = new BungeeForceGen(p2, 2, 10);
+		_registry.addReg(spring1, p2);
+		_registry.addReg(spring2, p1);
+		DragForceGen* drag = new DragForceGen(.05);
+		_registry.addReg(drag, p1);
+		_registry.addReg(drag, p2);
+		_particles.push_back(p1);
+		_particles.push_back(p2);
+		_forceGenerators.push_back(drag);
+		_forceGenerators.push_back(spring1);
+		_forceGenerators.push_back(spring2);
+	}
+
+	void BuoyancyGen() {
+		Particle* liquid = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 0, 1e10, { 0,0,1,1 }, CreateShape(physx::PxBoxGeometry(20, 2, 20)));
+		Particle* p = new Particle({ 0,-5, 0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,0,0,1 }, CreateShape(physx::PxBoxGeometry(3, 3, 3)));
+
+		BuoyancyForceGen* bg = new BuoyancyForceGen(5, 27, 1, liquid);
+		GravForceGen* gg = new GravForceGen(Vector3(0, -9.8, 0), 0);
+		_registry.addReg(bg, p);
+		_registry.addReg(gg, p);
+		_forceGenerators.push_back(gg);
+		_forceGenerators.push_back(bg);
+		_particles.push_back(p);
+	}
 protected:
 	std::list<Particle*> _particles;
 	std::list<ParticleGenerator*> _generators;
+	std::list<ForceGen*> _forceGenerators;
 	
 	ParticleForceReg _registry;
+	
 	Vector3 pos;
 	int activeForce = 3;
 };
