@@ -19,8 +19,8 @@ public:
 	virtual void setPos(Vector3 pos) { this->pose.p = pos; };
 	virtual void setAcc(Vector3 acc) { this->acc = acc; };
 	virtual void setMass(float mass) {
-		if (mass <= 0) unMass = 0;
-		else unMass = 1/mass;
+		if (mass <= 0) this->unMass = 0;
+		else this->unMass = 1/mass;
 
 		this->Mass = mass;
 	}

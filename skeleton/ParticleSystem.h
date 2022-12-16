@@ -130,7 +130,7 @@ public:
 		
 		for (int i = 0; i < num; i++) {
 			Particle* part = new Particle({ 10,(float)i,10}, { 0,0,0 }, { 0,0,0 },
-				0.99, 10, 20, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
+				0.99, 10, 1e10, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1)), true);
 			_registry.addReg(gen, part);
 			_particles.push_back(part);
 		}
@@ -152,7 +152,7 @@ public:
 	
 	void SpringGen() {
 		Particle* p1 = new Particle({ 10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10);
-		Particle* p2 = new Particle({ -10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,0,1,1 });
+		Particle* p2 = new Particle({ -10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 0,0,1,1 });
 		SpringForceGen* spring1 = new SpringForceGen(p1, 2, 5);
 		SpringForceGen* spring2 = new SpringForceGen(p2, 2, 5);
 		_registry.addReg(spring1, p2);
@@ -169,7 +169,7 @@ public:
 
 	void BungeeGen() {
 		Particle* p1 = new Particle({ 10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10);
-		Particle* p2 = new Particle({ -10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,0,1,1 });
+		Particle* p2 = new Particle({ -10,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,0,0,1 });
 		BungeeForceGen* spring1 = new BungeeForceGen(p1, 2, 10);
 		BungeeForceGen* spring2 = new BungeeForceGen(p2, 2, 10);
 		_registry.addReg(spring1, p2);
@@ -185,8 +185,8 @@ public:
 	}
 
 	void BuoyancyGen() {
-		Particle* liquid = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 0, 1e10, { 0,0,1,1 }, CreateShape(physx::PxBoxGeometry(20, 2, 20)));
-		Particle* p = new Particle({ 0,-5, 0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,0,0,1 }, CreateShape(physx::PxBoxGeometry(3, 3, 3)));
+		Particle* liquid = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 0, 1e10, { 0,0,0.3,1 }, CreateShape(physx::PxBoxGeometry(20, 2, 20)));
+		Particle* p = new Particle({ 0,-5, 0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 5, 1e10, { 1,1,0,1 }, CreateShape(physx::PxBoxGeometry(3, 3, 3)));
 
 		BuoyancyForceGen* bg = new BuoyancyForceGen(5, 27, 1, liquid);
 		GravForceGen* gg = new GravForceGen(Vector3(0, -9.8, 0), 0);

@@ -25,9 +25,15 @@ Particle::~Particle() {
 
 void Particle::integrate(double t) {
 	if (unMass <= 0.0f) return;
+
+	
+	Vector3 mAcc = acc + force * unMass;
+	
+	this->vel = this->vel * pow(this->damping, t) + mAcc * t;
+	//this->acc += force * unMass;
 	this->pose.p += this->vel * t;
-	this->acc += force * unMass;
-	this->vel = this->vel * pow(this->damping, t) + this->acc * t;
+
+
 	this->timeLimit -= t;
 	clearForce();
 }

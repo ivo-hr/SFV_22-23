@@ -9,6 +9,7 @@ class ParticleForceReg : public std::multimap<ForceGen*, Particle*>
 {
 public:
 	void updateForces(float duration) {
+		simTime += duration;
 		for (auto it = begin(); it != end(); ++it)
 			it->first->updateForce(it->second, duration);
 	}
@@ -44,4 +45,7 @@ public:
 			else ++it;
 		}
 	}
+	
+private:
+	double simTime = 0;
 };

@@ -65,15 +65,19 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
+	//flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
 	partSys = new ParticleSystem(Vector3(0, 0, 0));
 	
-	partSys->TornadoGen(100);
 
-	//partSys->TornadoGen(100);
+	//partSys->AnchSpringGen();
+	//partSys->SpringGen();
+	//partSys->BungeeGen();
+	//partSys->BuoyancyGen();
+	//partSys->gravGen(100);
+	partSys->TornadoGen(100);
 	//partSys->WindGen(100);
-	//partSys->generateGFireworksSystem();
+	partSys->generateGFireworksSystem();
 
 }
 

@@ -51,14 +51,14 @@ SpringForceGen::SpringForceGen(Particle* other, float k, float resting_length) :
 
 void SpringForceGen::updateForce(Particle* p, double duration)
 {
-	if (fabs(p->getUnMass()) <= 1e-10) return;
+	if (fabs(p->getUnMass()) <= 0.0f) return;
 
 	Vector3 force = _other->getPos() - p->getPos();
 
 	const float length = force.normalize();
 	const float delta_x = length - _resting_length;
 
-	force *= delta_x * _k;
+	force *= delta_x * _k/duration;
 
 	p->addForce(force);
 }
@@ -79,7 +79,7 @@ BungeeForceGen::BungeeForceGen(Particle* other, float k, float resting_length) :
 
 void BungeeForceGen::updateForce(Particle* p, double duration)
 {
-	if (fabs(p->getUnMass()) <= 1e-10) return;
+	if (fabs(p->getUnMass()) <= 0.0f) return;
 
 	Vector3 force = _other->getPos() - p->getPos();
 
@@ -100,7 +100,7 @@ BuoyancyForceGen::BuoyancyForceGen(float height, float V, float d, Particle* liq
 
 void BuoyancyForceGen::updateForce(Particle* p, double duration)
 {
-	if (fabs(p->getUnMass()) <= 1e-10) return;
+	if (fabs(p->getUnMass()) <= 0.0f) return;
 
 	float h = p->getPos().y;
 	float h0 = _liquid_particle->getPos().y;
