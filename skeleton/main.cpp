@@ -16,6 +16,9 @@
 
 #include "ParticleSystem.h"
 
+#include "WorldM.h"
+#include "RigidBody.h"
+
 
 using namespace physx;
 
@@ -40,6 +43,9 @@ Particle* flr;
 std::vector<Projectile*> projectiles;
 
 ParticleSystem* partSys;
+
+RigidBody* rb;
+WorldManager* world;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -68,16 +74,22 @@ void initPhysics(bool interactive)
 	//flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
 	partSys = new ParticleSystem(Vector3(0, 0, 0));
-	
+
+	world = new WorldManager(gScene, gPhysics);
 
 	//partSys->AnchSpringGen();
 	//partSys->SpringGen();
 	//partSys->BungeeGen();
 	//partSys->BuoyancyGen();
 	//partSys->gravGen(100);
-	partSys->TornadoGen(100);
+	//partSys->TornadoGen(100);
 	//partSys->WindGen(100);
+
 	partSys->generateGFireworksSystem();
+	
+	world->GenDemo();
+
+
 
 }
 
@@ -117,6 +129,8 @@ void stepPhysics(bool interactive, double t)
 
 	partSys->update(t);
 	
+	world->update(t);
+	
 }
 
 // Function to clean data
@@ -142,6 +156,7 @@ void cleanupPhysics(bool interactive)
 	
 	gFoundation->release();
 
+	delete rb;
 
 	}
 

@@ -261,8 +261,10 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
+    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyGen.cpp" />
-    <ClCompile Include="WorldMngr.cpp" />
+    <ClCompile Include="RigidForceGen.cpp" />
+    <ClCompile Include="WorldM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.hpp" />
@@ -271,7 +273,10 @@
     <ClInclude Include="ForceGenerator.h" />
     <ClInclude Include="GaussianPartGen.h" />
     <ClInclude Include="ParticleForceReg.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="RigidBodyGen.h" />
+    <ClInclude Include="RigidForceGen.h" />
+    <ClInclude Include="RigidForceReg.h" />
     <ClInclude Include="UniformPartGen.h" />
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="ParticleSystem.h" />
@@ -280,7 +285,7 @@
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />
-    <ClInclude Include="WorldMngr.h" />
+    <ClInclude Include="WorldM.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
