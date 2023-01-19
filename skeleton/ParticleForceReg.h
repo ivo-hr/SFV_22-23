@@ -15,6 +15,7 @@ public:
 	}
 
 	void addReg(ForceGen* fg, Particle* p) {
+		
 		insert({ fg, p });
 	}
 	void addReg(int type, Particle* p) {
@@ -42,6 +43,13 @@ public:
 	void deletePartReg(Particle* p) {
 		for (auto it = begin(); it != end();) {
 			if (it->second == p) it = erase(it);
+			else ++it;
+		}
+	}
+
+	void deleteForceReg(ForceGen* fg) {
+		for (auto it = begin(); it != end();) {
+			if (it->first == fg) it = erase(it);
 			else ++it;
 		}
 	}

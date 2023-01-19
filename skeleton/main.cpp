@@ -43,9 +43,13 @@ Particle* flr;
 std::vector<Projectile*> projectiles;
 
 ParticleSystem* partSys;
-
+ParticleSystem* botDeth;
 RigidBody* rb;
 WorldManager* world;
+
+Camera* cam;
+
+bool ended = false;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -71,9 +75,9 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	//flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
+	flr = new Floor(Vector3(0, 0, 0), Vector3(10000, 0.01, 10000));
 
-	partSys = new ParticleSystem(Vector3(0, 0, 0));
+	partSys = new ParticleSystem(Vector3(0, 30, 0));
 
 	world = new WorldManager(gScene, gPhysics);
 
@@ -85,12 +89,14 @@ void initPhysics(bool interactive)
 	//partSys->TornadoGen(100);
 	//partSys->WindGen(100);
 
-	partSys->generateGFireworksSystem();
+	//partSys->generateGFireworksSystem();
 	
-	world->GenDemo();
+	//world->GenDemo();
 
 
+	world->GenBoatGame();
 
+	cam = GetCamera();
 }
 
 
@@ -99,6 +105,10 @@ void initPhysics(bool interactive)
 // t: time passed since last call in milliseconds
 void stepPhysics(bool interactive, double t)
 {
+	
+	
+	
+	
 	PX_UNUSED(interactive);
 
 	gScene->simulate(t);
@@ -130,6 +140,8 @@ void stepPhysics(bool interactive, double t)
 	partSys->update(t);
 	
 	world->update(t);
+
+	if (botDeth != NULL)	botDeth->update(t);
 	
 }
 
@@ -145,6 +157,7 @@ void cleanupPhysics(bool interactive)
 		delete p;
 	}
 	delete partSys;
+	if (botDeth != NULL) delete botDeth;
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
@@ -158,6 +171,8 @@ void cleanupPhysics(bool interactive)
 
 	delete rb;
 
+	delete world;
+
 	}
 
 // Function called when a key is pressed
@@ -167,43 +182,97 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 	switch(toupper(key))
 	{
-	//case 'B': break;
-	//case ' ':	break;
 	case ' ':
 	{
+		world->windFG->changeWind(Vector3(0, 0, 0));
+		partSys->BoatWind(Vector3(0, 0, 0));
+		//camera.transform(PxVec3(0, 100000, 0));
+		//cam->getDir() = Vector3(0, 0, 0);
+		if (ended) {
+			/*cleanupPhysics(true);
+			
+			initPhysics(true);*/
+		}
+
 		break;
 	}
-	case '1':
-		projectiles.push_back(new Projectile(Projectile::Bullet));
-	break;
-	case '2':
-		projectiles.push_back(new Projectile(Projectile::Mortar));
+	case 'T':
+		world->windFG->addWind(Vector3(0, 0, -1));
+		
+		
+		/*if (world->boat->getRotation().y < physx::PxQuat(physx::PxPi / 2 + 1, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, 1, 0));
+			world->sail->addTorque(Vector3(0, 1, 0));
+		}
+		else if (world->boat->getRotation().y > physx::PxQuat(physx::PxPi / 2 - 1, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, -1, 0));
+			world->sail->addTorque(Vector3(0, -1, 0));
+		}*/
+			break;
+	case 'F':
+		world->windFG->addWind(Vector3(-1, 0, 0));
+		/*if (world->boat->getRotation().y < physx::PxQuat(physx::PxPi, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, 1, 0));
+			world->sail->addTorque(Vector3(0, 1, 0));
+		}
+		else if (world->boat->getRotation().y > physx::PxQuat(physx::PxPi, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, -1, 0));
+			world->sail->addTorque(Vector3(0, -1, 0));
+		}*/
 		break;
-	case '3':
-		projectiles.push_back(new Projectile(Projectile::RPG));
+	case 'G':
+		world->windFG->addWind(Vector3(0, 0, 1));
+		/*if (world->boat->getRotation().y < physx::PxQuat(physx::PxPi * 1.5, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, 1, 0));
+			world->sail->addTorque(Vector3(0, 1, 0));
+		}
+		else if (world->boat->getRotation().y > physx::PxQuat(physx::PxPi * 1.5, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, -1, 0));
+			world->sail->addTorque(Vector3(0, -1, 0));
+		}*/
 		break;
-	case '4':
-		projectiles.push_back(new Projectile(Projectile::Plasma));
-		break;
-	case '5':
-		partSys->generateGFireworksSystem();
-	break;
-	case '6':
-		partSys->generateNFireworksSystem();
-		break;
-	case '7':
-		partSys->generateWhateverSystem();
+	case 'H':
+		world->windFG->addWind(Vector3(1, 0, 0));
+		/*if (world->boat->getRotation().y < physx::PxQuat(0, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, 1, 0));
+			world->sail->addTorque(Vector3(0, 1, 0));
+		}
+		else if (world->boat->getRotation().y > physx::PxQuat(0, physx::PxVec3(0, 1, 0)).y) {
+			world->boat->addTorque(Vector3(0, -1, 0));
+			world->sail->addTorque(Vector3(0, -1, 0));
+		}*/
 		break;
 
 	default:
+		world->windFG->addWind(Vector3(-.1, 0, -.1));
 		break;
 	}
 }
 
+
+
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
-	PX_UNUSED(actor1);
-	PX_UNUSED(actor2);
+	if (!ended) {
+		if (actor1->getName() == "barco" && actor2->getName() == "muro" || actor1->getName() == "muro" && actor2->getName() == "barco")
+		{
+			std::cout << "Collision" << std::endl;
+			if (botDeth == NULL) botDeth = new ParticleSystem(world->boat->getPosition());
+			botDeth->WindGen(0);
+			botDeth->generateGFireworksSystem(20);
+			ended = true;
+		}
+
+		if (actor1->getName() == "barco" && actor2->getName() == "moneda" || actor1->getName() == "moneda" && actor2->getName() == "barco") {
+			std::cout << "Win" << std::endl;
+			if (botDeth == NULL) botDeth = new ParticleSystem(world->boat->getPosition());
+
+			botDeth->WindGen(0);
+			botDeth->generateNFireworksSystem(20);
+
+			ended = true;
+		}
+	}
 }
 
 

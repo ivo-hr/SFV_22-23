@@ -14,10 +14,12 @@ public:
 		pos = Pos;
 	};
 	void update(double t) {
-		for (auto g : _generators) {
-			for (auto p : g->generateParticles()) {
-				_particles.push_back(p);
-				_registry.addReg(activeForce, p);	//no furula :(
+		if (_particles.size() < 1000) {
+			for (auto g : _generators) {
+				for (auto p : g->generateParticles()) {
+					_particles.push_back(p);
+					_registry.addReg(activeForce, p);	//no furula :(
+				}
 			}
 		}
 
@@ -31,9 +33,10 @@ public:
 				Firework* f = dynamic_cast<Firework*>(*it);
 				if (f != nullptr)
 					for (auto i : f->explode()) {
-						_particles.push_back(i);
-						_registry.addReg(activeForce, i);
-						
+						if (_particles.size() < 1000) {
+							_particles.push_back(i);
+							_registry.addReg(activeForce, i);
+						}
 					}
 				_registry.deletePartReg(*it);
 				delete (*it);
@@ -48,28 +51,28 @@ public:
 				return g;
 		return nullptr;
 	};
-	void generateNFireworksSystem() {
+	void generateNFireworksSystem(int scale) {
 		if (getParticleGenerator("Uniform") != nullptr) return;
 
-		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 5, { 0,1,1,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
+		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 10, { 1,1,0,1 }, CreateShape(physx::PxSphereGeometry(scale)), false);
 		_registry.addReg(activeForce, i);
 		std::shared_ptr<UniformParticleGenerator> p;
-		p.reset(new UniformParticleGenerator("Uniform", i, 0.75, { 10,10,10 }, { 15,15,15 }, 1000));
-		Firework* f = new Firework(pos, { 0,10,0 }, { 0,90,0 }, 0.99, 3.0f, 2, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(3)), { p });
+		p.reset(new UniformParticleGenerator("Uniform", i, 0.75, { 10,10,10 }, { 200,200,200 }, 100));
+		Firework* f = new Firework(pos, { 0,10,0 }, { 0,(float)scale,0 }, 0.99, 3.0f, 2, { 1,0,1,1 }, CreateShape(physx::PxSphereGeometry(scale)), { p });
 		_particles.push_back(f);
 		_registry.addReg(activeForce, f);
 		
 	};
-	void generateGFireworksSystem() {
+	void generateGFireworksSystem(int scale) {
 		if (getParticleGenerator("Gauss") != nullptr) return;
 
-		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 5, { 1,0,1,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
-		_registry.addReg(activeForce, i);
+		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 2.0f, 10, { 1,0,0,1 }, CreateShape(physx::PxSphereGeometry(1 * scale)), false);
+		//_registry.addReg(activeForce, i);
 		std::shared_ptr<GaussianParticleGenerator> p;
-		p.reset(new GaussianParticleGenerator("Gauss", i, 0.75, { 10,10,10 }, { 10,10,10 }, 1000));
-		Firework* f = new Firework(pos, { 0,20,0 }, { 0,50,0 }, 0.99, 3.0f, 2, { 0,0,1,1 }, CreateShape(physx::PxSphereGeometry(3)), { p });
+		p.reset(new GaussianParticleGenerator("Gauss", i, 0.75, { 10,10,10 }, { 100,100,100 }, 100));
+		Firework* f = new Firework(pos, { 0,20,0 }, {0, (float)scale ,0 }, 0.99, 3.0f, 2, { 0,0,0,1 }, CreateShape(physx::PxSphereGeometry(1 * scale)), { p });
 		_particles.push_back(f);
-		_registry.addReg(activeForce, f);
+		//_registry.addReg(activeForce, f);
 	};
 	void generateWhateverSystem() {
 		if (getParticleGenerator("Whatever") != nullptr) return;
@@ -122,6 +125,30 @@ public:
 		}
 		activeForce = 2;
 	}
+
+	void BoatWind(Vector3 dir) {
+		activeForce = 2;
+		for (auto i = _forceGenerators.begin(); i != _forceGenerators.end(); i++) {
+			if (typeid(*i) == typeid(WindForceGen)) {
+				_registry.deleteForceReg(*i);
+				
+				delete (*i);
+				i = _forceGenerators.erase(i);
+			}
+		}
+		WindForceGen* gen = new WindForceGen(dir * 100, 1, 0.1);
+		_forceGenerators.push_back(gen);
+
+		Particle* i = new Particle({ 0,0,0 }, { 0,0,0 }, { 0,0,0 }, 0.99, 1, 5, { 1,1,1,1 }, CreateShape(physx::PxSphereGeometry(1)), false);
+		_registry.addReg(gen, i);
+		std::shared_ptr<UniformParticleGenerator> p;
+		p.reset(new UniformParticleGenerator("Uni", i, 0.3, { 100000,100000,100000 }, { 1,1,1}, 1000));
+		Firework* f = new Firework(pos, { 0,0,0 }, { 0,0,0 }, 0., 1.0f, 0, { 1,1,1,1 }, CreateShape(physx::PxBoxGeometry(Vector3(1, 1, 1))), { p });
+		_particles.push_back(f);
+		_registry.addReg(gen, f);
+
+	}
+	
 	void TornadoGen(int num) {
 
 		

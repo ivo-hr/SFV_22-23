@@ -9,10 +9,12 @@ public:
 	enum Type { Cube, Capsule, Sphere };
 	
 	RigidBody(physx::PxRigidDynamic* rigid, double time, Vector4 color);
+	RigidBody(physx::PxRigidDynamic* rigid, Vector4 color);
 	RigidBody(physx::PxScene* scene, physx::PxPhysics*, Vector3 pos, Vector3 vel, double mass, double time, Vector3 dims, Vector4 color, Type type = Cube);
 	virtual ~RigidBody();
 	void update(double t) {
-		if (_lifeTime > 0.0) _life += t;
+		if(_life != -1) 
+			if (_lifeTime > 0.0) _life += t;
 	};
 	bool isAlive() {
 		return _life < _lifeTime;
@@ -28,6 +30,9 @@ public:
 	Vector3 getPosition() const {
 		return _rigid->getGlobalPose().p;
 	};
+	physx::PxQuat getRotation() const {
+		return _rigid->getGlobalPose().q;
+	};
 	Vector3 getLinVel() const {
 		return _rigid->getLinearVelocity();
 	};
@@ -37,6 +42,9 @@ public:
 	float getUnMass() const {
 		if (_rigid->getMass() <= 0) return -1;
 		return _rigid->getInvMass();
+	};
+	void setRotation(physx::PxQuat q) {
+		_rigid->setGlobalPose(physx::PxTransform(getPosition(), q));
 	};
 
 	

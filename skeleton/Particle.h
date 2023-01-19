@@ -45,7 +45,7 @@ protected:
 
 class Floor : public Particle {
 public:
-	Floor(Vector3 Pos, Vector3 Dim) : Particle(Pos, Vector3(0, 0, 0), Vector3(0, 0, 0), 0.0f, 1.0f, 1, { 0.,1.,.3,1 }, CreateShape(physx::PxBoxGeometry(Dim))) {
+	Floor(Vector3 Pos, Vector3 Dim) : Particle(Pos, Vector3(0, 0, 0), Vector3(0, 0, 0), 0.0f, 1.0f, 1, { 0.1,3,10,1 }, CreateShape(physx::PxBoxGeometry(Dim))) {
 	}
 	virtual ~Floor() {};
 };

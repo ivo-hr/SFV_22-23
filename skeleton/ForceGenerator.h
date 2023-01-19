@@ -32,6 +32,8 @@ protected:
 class WindForceGen : public ForceGen {
 public:
 	WindForceGen(Vector3& v, float k1, float k2);
+	void changeWind(Vector3& v) { _windVel = v; };
+	void addWind(Vector3& v) { _windVel += v; };
 	virtual ~WindForceGen() {};
 	void updateForce(Particle* particle, double duration) override;
 protected:

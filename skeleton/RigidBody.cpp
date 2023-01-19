@@ -10,6 +10,14 @@ RigidBody::RigidBody(physx::PxRigidDynamic* rigid, double time, Vector4 color) {
 	_render_item = new RenderItem(shape, _rigid, color);
 }
 
+RigidBody::RigidBody(physx::PxRigidDynamic* rigid, Vector4 color) {
+	_rigid = rigid;
+	_life = -1;
+	physx::PxShape* shape;
+	_rigid->getShapes(&shape, 1);
+	_render_item = new RenderItem(shape, _rigid, color);
+}
+
 RigidBody::RigidBody(physx::PxScene* scene, physx::PxPhysics* physx, Vector3 pos, Vector3 vel, double mass, double time, Vector3 dims, Vector4 color, Type type)
 {
 	_rigid = physx->createRigidDynamic(physx::PxTransform(pos));
