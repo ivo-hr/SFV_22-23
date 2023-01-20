@@ -9,6 +9,8 @@ Carpetas bin y common https://ucomplutense-my.sharepoint.com/:u:/g/personal/dava
 
 ###
 
+___
+
 # El Barquito Vago
 
 ## Tan vago que se lo lleva el viento
@@ -17,3 +19,7 @@ Carpetas bin y common https://ucomplutense-my.sharepoint.com/:u:/g/personal/dava
 Cuidado con las rocas, habrá que esquivarlas de camino a la gran moneda dorada.
 ### Controla hacia dónde sopla el viento con las teclas T, F, G y H, y dentén todo el viento dándole a ESPACIO.
 ¡Recuerda! Si no paras el viento, el viento no va a parar, y el barquito puede llegar a velocidades de vértigo muy cerca de las rocas...
+___
+###
+# [Memoria del proyecto](https://github.com/ivo-hr/SFV_22-23/blob/main/Memoria%20SFV.pdf)
+
